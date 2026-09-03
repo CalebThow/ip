@@ -65,14 +65,14 @@ public class AgentCT {
                     System.out.println("     Sorry, that task number does not exist.");
                 }
             } else if (taskCount < tasks.length && command.startsWith("todo ")) {
-                addTask(tasks, taskCount, new Task("T", command.substring(5), ""));
+                addTask(tasks, taskCount, new Todo(command.substring(5)));
                 taskCount++;
             } else if (taskCount < tasks.length && command.startsWith("deadline ")
                     && command.contains(" /by ")) {
                 int markerIndex = command.indexOf(" /by ");
                 String description = command.substring(9, markerIndex);
                 String by = command.substring(markerIndex + 5);
-                addTask(tasks, taskCount, new Task("D", description, " (by: " + by + ")"));
+                addTask(tasks, taskCount, new Deadline(description, by));
                 taskCount++;
             } else if (taskCount < tasks.length && command.startsWith("event ")
                     && command.contains(" /from ") && command.contains(" /to ")) {
@@ -81,8 +81,7 @@ public class AgentCT {
                 String description = command.substring(6, fromIndex);
                 String from = command.substring(fromIndex + 7, toIndex);
                 String to = command.substring(toIndex + 5);
-                addTask(tasks, taskCount, new Task("E", description,
-                        " (from: " + from + " to: " + to + ")"));
+                addTask(tasks, taskCount, new Event(description, from, to));
                 taskCount++;
             } else if (taskCount < tasks.length) {
                 tasks[taskCount] = new Task(command);

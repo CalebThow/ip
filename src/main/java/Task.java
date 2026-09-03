@@ -4,9 +4,7 @@ package ip;
  * Represents a task in the task list.
  */
 public class Task {
-    private final String taskType;
     private final String description;
-    private final String timing;
     private boolean isDone;
 
     /**
@@ -15,20 +13,7 @@ public class Task {
      * @param description the task description
      */
     public Task(String description) {
-        this("T", description, "");
-    }
-
-    /**
-     * Creates a task with a type and optional timing information.
-     *
-     * @param taskType the one-letter task type
-     * @param description the task description
-     * @param timing the formatted date/time information
-     */
-    public Task(String taskType, String description, String timing) {
-        this.taskType = taskType;
         this.description = description;
-        this.timing = timing;
         this.isDone = false;
     }
 
@@ -70,7 +55,7 @@ public class Task {
      * @return the formatted task description
      */
     public String getDisplayText() {
-        return description + timing;
+        return description;
     }
 
     /**
@@ -79,6 +64,6 @@ public class Task {
      * @return the one-letter task type
      */
     public String getTaskType() {
-        return taskType;
+        return "T";
     }
 }
