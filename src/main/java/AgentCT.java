@@ -1,11 +1,14 @@
+package ip;
+
 import java.util.Scanner;
 
 /**
  * Runs the AgentCT command-line chatbot.
  */
 public class AgentCT {
+    /** Runs the command-line chatbot. */
     public static void main(String[] args) {
-        String line = "____________________________________________________________";
+        final String separator = "____________________________________________________________";
         String banner =
                     "    _                    _    ____ _____\n" +
                     "   / \\   __ _  ___ _ __ | |_ / ___|_   _|\n" +
@@ -14,12 +17,12 @@ public class AgentCT {
                     "/_/   \\_\\__, |\\___|_| |_|\\__|\\____| |_|\n" +
                     "        |___/";
 
-        System.out.println(line);
+        System.out.println(separator);
         System.out.println(banner);
-        System.out.println(line);
+        System.out.println(separator);
         System.out.println("Welcome! I'm AgentCT.");
         System.out.println("How may I help you?");
-        System.out.println(line);
+        System.out.println(separator);
 
         Task[] tasks = new Task[100];
         int taskCount = 0;
@@ -27,11 +30,11 @@ public class AgentCT {
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println("     " + command);
-            System.out.println(line);
+            System.out.println(separator);
 
             if (command.equals("bye")) {
                 System.out.println("     Goodbye! Hope you have an amazing day!");
-                System.out.println(line);
+                System.out.println(separator);
                 break;
             }
 
@@ -65,7 +68,7 @@ public class AgentCT {
                 taskCount++;
                 System.out.println("     added: " + command);
             }
-            System.out.println(line);
+            System.out.println(separator);
         }
         scanner.close();
     }

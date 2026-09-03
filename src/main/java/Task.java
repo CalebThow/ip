@@ -1,9 +1,11 @@
+package ip;
+
 /**
  * Represents a task in the task list.
  */
 public class Task {
-    protected String description;
-    protected boolean isDone;
+    private final String description;
+    private boolean isDone;
 
     /**
      * Creates a pending task with the given description.
