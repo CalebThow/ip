@@ -21,8 +21,7 @@ public class AgentCT {
         System.out.println("How may I help you?");
         System.out.println(line);
 
-        String[] tasks = new String[100];
-        boolean[] completed = new boolean[tasks.length];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
@@ -38,16 +37,16 @@ public class AgentCT {
 
             if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
-                    String status = completed[i] ? "[X]" : "[ ]";
-                    System.out.println("     " + (i + 1) + "." + status + " " + tasks[i]);
+                    System.out.println("     " + (i + 1) + ".[" + tasks[i].getStatusIcon()
+                            + "] " + tasks[i].getDescription());
                 }
             } else if (command.matches("mark \\d+")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
                 if (taskNumber >= 1 && taskNumber <= taskCount) {
                     int taskIndex = taskNumber - 1;
-                    completed[taskIndex] = true;
+                    tasks[taskIndex].markAsDone();
                     System.out.println("     Nice! I've marked this task as done:");
-                    System.out.println("       [X] " + tasks[taskIndex]);
+                    System.out.println("       [X] " + tasks[taskIndex].getDescription());
                 } else {
                     System.out.println("     Sorry, that task number does not exist.");
                 }
@@ -55,14 +54,14 @@ public class AgentCT {
                 int taskNumber = Integer.parseInt(command.substring(7));
                 if (taskNumber >= 1 && taskNumber <= taskCount) {
                     int taskIndex = taskNumber - 1;
-                    completed[taskIndex] = false;
+                    tasks[taskIndex].markAsNotDone();
                     System.out.println("     OK, I've marked this task as not done yet:");
-                    System.out.println("       [ ] " + tasks[taskIndex]);
+                    System.out.println("       [ ] " + tasks[taskIndex].getDescription());
                 } else {
                     System.out.println("     Sorry, that task number does not exist.");
                 }
             } else if (taskCount < tasks.length) {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println("     added: " + command);
             }
