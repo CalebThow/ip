@@ -39,9 +39,10 @@ public class AgentCT {
             }
 
             if (command.equals("list")) {
+                System.out.println("     Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println("     " + (i + 1) + ".[" + tasks[i].getStatusIcon()
-                            + "] " + tasks[i].getDescription());
+                    System.out.println("     " + (i + 1) + ".[" + tasks[i].getTaskType() + "]["
+                            + tasks[i].getStatusIcon() + "] " + tasks[i].getDisplayText());
                 }
             } else if (command.matches("mark \\d+")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
@@ -63,6 +64,26 @@ public class AgentCT {
                 } else {
                     System.out.println("     Sorry, that task number does not exist.");
                 }
+            } else if (taskCount < tasks.length && command.startsWith("todo ")) {
+                addTask(tasks, taskCount, new Task("T", command.substring(5), ""));
+                taskCount++;
+            } else if (taskCount < tasks.length && command.startsWith("deadline ")
+                    && command.contains(" /by ")) {
+                int markerIndex = command.indexOf(" /by ");
+                String description = command.substring(9, markerIndex);
+                String by = command.substring(markerIndex + 5);
+                addTask(tasks, taskCount, new Task("D", description, " (by: " + by + ")"));
+                taskCount++;
+            } else if (taskCount < tasks.length && command.startsWith("event ")
+                    && command.contains(" /from ") && command.contains(" /to ")) {
+                int fromIndex = command.indexOf(" /from ");
+                int toIndex = command.indexOf(" /to ", fromIndex);
+                String description = command.substring(6, fromIndex);
+                String from = command.substring(fromIndex + 7, toIndex);
+                String to = command.substring(toIndex + 5);
+                addTask(tasks, taskCount, new Task("E", description,
+                        " (from: " + from + " to: " + to + ")"));
+                taskCount++;
             } else if (taskCount < tasks.length) {
                 tasks[taskCount] = new Task(command);
                 taskCount++;
@@ -71,5 +92,13 @@ public class AgentCT {
             System.out.println(separator);
         }
         scanner.close();
+    }
+
+    /** Adds a task and prints the confirmation shared by task commands. */
+    private static void addTask(Task[] tasks, int taskCount, Task task) {
+        tasks[taskCount] = task;
+        System.out.println("     Got it. I've added this task:");
+        System.out.println("       [" + task.getTaskType() + "][ ] " + task.getDisplayText());
+        System.out.println("     Now you have " + (taskCount + 1) + " tasks in the list.");
     }
 }
