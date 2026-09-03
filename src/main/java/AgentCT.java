@@ -22,6 +22,7 @@ public class AgentCT {
         System.out.println(line);
 
         String[] tasks = new String[100];
+        boolean[] completed = new boolean[tasks.length];
         int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
@@ -37,7 +38,18 @@ public class AgentCT {
 
             if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println("     " + (i + 1) + ". " + tasks[i]);
+                    String status = completed[i] ? "[X]" : "[ ]";
+                    System.out.println("     " + (i + 1) + "." + status + " " + tasks[i]);
+                }
+            } else if (command.matches("mark \\d+")) {
+                int taskNumber = Integer.parseInt(command.substring(5));
+                if (taskNumber >= 1 && taskNumber <= taskCount) {
+                    int taskIndex = taskNumber - 1;
+                    completed[taskIndex] = true;
+                    System.out.println("     Nice! I've marked this task as done:");
+                    System.out.println("       [X] " + tasks[taskIndex]);
+                } else {
+                    System.out.println("     Sorry, that task number does not exist.");
                 }
             } else if (taskCount < tasks.length) {
                 tasks[taskCount] = command;
