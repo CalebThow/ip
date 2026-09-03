@@ -51,6 +51,16 @@ public class AgentCT {
                 } else {
                     System.out.println("     Sorry, that task number does not exist.");
                 }
+            } else if (command.matches("unmark \\d+")) {
+                int taskNumber = Integer.parseInt(command.substring(7));
+                if (taskNumber >= 1 && taskNumber <= taskCount) {
+                    int taskIndex = taskNumber - 1;
+                    completed[taskIndex] = false;
+                    System.out.println("     OK, I've marked this task as not done yet:");
+                    System.out.println("       [ ] " + tasks[taskIndex]);
+                } else {
+                    System.out.println("     Sorry, that task number does not exist.");
+                }
             } else if (taskCount < tasks.length) {
                 tasks[taskCount] = command;
                 taskCount++;
