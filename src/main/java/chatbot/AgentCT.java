@@ -25,8 +25,14 @@ public class AgentCT {
         System.out.println(separator);
 
         Task[] tasks = new Task[100];
-        int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
+        runCommandLoop(scanner, tasks, separator);
+        scanner.close();
+    }
+
+    /** Processes chatbot commands until the user ends the session. */
+    private static void runCommandLoop(Scanner scanner, Task[] tasks, String separator) {
+        int taskCount = 0;
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println("     " + command);
@@ -90,7 +96,6 @@ public class AgentCT {
             }
             System.out.println(separator);
         }
-        scanner.close();
     }
 
     /** Adds a task and prints the confirmation shared by task commands. */
