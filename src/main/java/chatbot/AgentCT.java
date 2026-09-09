@@ -37,23 +37,26 @@ public class AgentCT {
         int taskCount = 0;
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-            taskCount = processCommand(command, tasks, taskCount, separator);
-            if (taskCount < 0) {
+            if (command.equals("bye")) {
+                printGoodbye(separator);
                 break;
             }
+            taskCount = processCommand(command, tasks, taskCount, separator);
         }
     }
 
-    /** Processes one chatbot command and returns the updated task count. */
+    /** Prints the response shown when the user ends the session. */
+    private static void printGoodbye(String separator) {
+        System.out.println("     bye");
+        System.out.println(separator);
+        System.out.println("     Goodbye! Hope you have an amazing day!");
+        System.out.println(separator);
+    }
+
+    /** Processes one non-exit chatbot command and returns the updated task count. */
     private static int processCommand(String command, List<Task> tasks, int taskCount, String separator) {
         System.out.println("     " + command);
         System.out.println(separator);
-
-        if (command.equals("bye")) {
-            System.out.println("     Goodbye! Hope you have an amazing day!");
-            System.out.println(separator);
-            return -1;
-        }
 
         if (command.equals("list")) {
             System.out.println("     Here are the tasks in your list:");
