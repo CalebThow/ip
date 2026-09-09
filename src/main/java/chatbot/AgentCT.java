@@ -59,12 +59,7 @@ public class AgentCT {
         System.out.println(separator);
 
         if (command.equals("list")) {
-            System.out.println("     Here are the tasks in your list:");
-            for (int i = 0; i < taskCount; i++) {
-                Task task = tasks.get(i);
-                System.out.println("     " + (i + 1) + ".[" + task.getTaskType() + "]["
-                        + task.getStatusIcon() + "] " + task.getDisplayText());
-            }
+            printTaskList(tasks);
         } else if (command.matches("mark \\d+")) {
             int taskNumber = Integer.parseInt(command.substring(5));
             if (taskNumber >= 1 && taskNumber <= taskCount) {
@@ -110,6 +105,16 @@ public class AgentCT {
         }
         System.out.println(separator);
         return taskCount;
+    }
+
+    /** Prints all tasks in their numbered display format. */
+    private static void printTaskList(List<Task> tasks) {
+        System.out.println("     Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            System.out.println("     " + (i + 1) + ".[" + task.getTaskType() + "]["
+                    + task.getStatusIcon() + "] " + task.getDisplayText());
+        }
     }
 
     /** Adds a task and prints the confirmation shared by task commands. */
