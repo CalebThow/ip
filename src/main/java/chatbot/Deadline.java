@@ -1,4 +1,4 @@
-package ip;
+package chatbot;
 
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {

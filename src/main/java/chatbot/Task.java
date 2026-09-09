@@ -1,4 +1,4 @@
-package ip;
+package chatbot;
 
 /**
  * Represents a task in the task list.

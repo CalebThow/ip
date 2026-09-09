@@ -1,4 +1,4 @@
-package ip;
+package chatbot;
 
 /** Represents a task without date or time information. */
 public class Todo extends Task {
