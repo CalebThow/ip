@@ -47,7 +47,6 @@ public class AgentCT {
 
     /** Prints the response shown when the user ends the session. */
     private static void printGoodbye(String separator) {
-        System.out.println("     bye");
         System.out.println(separator);
         System.out.println("     Goodbye! Hope you have an amazing day!");
         System.out.println(separator);
@@ -55,7 +54,6 @@ public class AgentCT {
 
     /** Processes one non-exit chatbot command and returns the updated task count. */
     private static int processCommand(String command, List<Task> tasks, int taskCount, String separator) {
-        System.out.println("     " + command);
         System.out.println(separator);
 
         if (command.equals("list")) {
@@ -80,6 +78,11 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
+        } else if (command.equals("todo ")) {
+            //Handle case where task description is empty
+            System.out.println("     Please provide a task description!");
+            System.out.println("     Format: todo <description>");
+            System.out.println("     Example: todo Play Video Games");
         } else if (command.startsWith("todo ")) {
             addTask(tasks, taskCount, new Todo(command.substring(5)));
             taskCount++;
@@ -99,9 +102,9 @@ public class AgentCT {
             addTask(tasks, taskCount, new Event(description, from, to));
             taskCount++;
         } else {
-            tasks.add(new Task(command));
-            taskCount++;
-            System.out.println("     added: " + command);
+            //Handle case where input entered does not match any existing command
+            System.out.println("     Please enter a valid command!");
+            System.out.println("     Example: \"todo \", \"deadline \", \"event \", \"list \", \"mark \", \"unmark \"");
         }
         System.out.println(separator);
         return taskCount;
