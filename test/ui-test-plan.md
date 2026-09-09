@@ -19,6 +19,25 @@
 bye
 ```
 
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
 ### Test case 2: Add and list task types
 
 **Aim:** Verify that todo, deadline, and event commands preserve their descriptions and timing strings, display the correct type icons, and update the task count.
@@ -47,35 +66,42 @@ ____________________________________________________________
 Welcome! I'm AgentCT.
 How may I help you?
 ____________________________________________________________
-     todo borrow book
 ____________________________________________________________
      Got it. I've added this task:
        [T][ ] borrow book
      Now you have 1 tasks in the list.
 ____________________________________________________________
-     deadline return book /by Sunday
 ____________________________________________________________
      Got it. I've added this task:
        [D][ ] return book (by: Sunday)
      Now you have 2 tasks in the list.
 ____________________________________________________________
-     event project meeting /from Mon 2pm /to 4pm
 ____________________________________________________________
      Got it. I've added this task:
        [E][ ] project meeting (from: Mon 2pm to: 4pm)
      Now you have 3 tasks in the list.
 ____________________________________________________________
-     list
 ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] borrow book
      2.[D][ ] return book (by: Sunday)
      3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
-     bye
 ____________________________________________________________
      Goodbye! Hope you have an amazing day!
 ____________________________________________________________
+```
+
+### Test case 3: Reject invalid commands
+
+**Aim:** Verify that an unrecognized command is rejected and is not added to the task list.
+
+**Inputs:**
+
+```text
+dance
+list
+bye
 ```
 
 **Expected output:**
@@ -92,7 +118,50 @@ ____________________________________________________________
 Welcome! I'm AgentCT.
 How may I help you?
 ____________________________________________________________
-     bye
+____________________________________________________________
+     Please enter a valid command!
+     Example: "todo ", "deadline ", "event ", "list ", "mark ", "unmark "
+____________________________________________________________
+     Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
+### Test case 4: Reject todo command without a description
+
+**Aim:** Verify that `todo ` without a description displays guidance and does not add a task.
+
+**Inputs:**
+
+```text
+todo 
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Please provide a task description!
+     Format: todo <description>
+     Example: todo Play Video Games
+____________________________________________________________
+     Here are the tasks in your list:
+____________________________________________________________
 ____________________________________________________________
      Goodbye! Hope you have an amazing day!
 ____________________________________________________________
