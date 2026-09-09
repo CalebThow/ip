@@ -41,7 +41,12 @@ public class AgentCT {
                 printGoodbye(separator);
                 break;
             }
-            taskCount = processCommand(command, tasks, taskCount, separator);
+            try {
+                taskCount = processCommand(command, tasks, taskCount, separator);
+            } catch (AgentCTException exception) {
+                printErrorMessage(exception.getMessage());
+                System.out.println(separator);
+            }
         }
     }
 
@@ -53,7 +58,8 @@ public class AgentCT {
     }
 
     /** Processes one non-exit chatbot command and returns the updated task count. */
-    private static int processCommand(String command, List<Task> tasks, int taskCount, String separator) {
+    private static int processCommand(String command, List<Task> tasks, int taskCount,
+            String separator) throws AgentCTException {
         System.out.println(separator);
 
         if (command.equals("list")) {
@@ -81,7 +87,7 @@ public class AgentCT {
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring(4).trim();
             if (description.isEmpty()) {
-                printMissingDescriptionMessage();
+                throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Todo(description));
                 taskCount++;
@@ -91,7 +97,7 @@ public class AgentCT {
             String description = command.substring(9, markerIndex).trim();
             String by = command.substring(markerIndex + 5).trim();
             if (description.isEmpty()) {
-                printMissingDescriptionMessage();
+                throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Deadline(description, by));
                 taskCount++;
@@ -104,31 +110,42 @@ public class AgentCT {
             String from = command.substring(fromIndex + 7, toIndex).trim();
             String to = command.substring(toIndex + 5).trim();
             if (description.isEmpty()) {
-                printMissingDescriptionMessage();
+                throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Event(description, from, to));
                 taskCount++;
             }
         } else {
-            // Reject input that does not match any supported command format.
-            System.out.println("     Please enter a valid command!");
-            System.out.println("     Examples:");
-            System.out.println("       todo <description>");
-            System.out.println("       deadline <description> /by <time>");
-            System.out.println("       event <description> /from <time> /to <time>");
-            System.out.println("       list");
-            System.out.println("       mark <number>");
-            System.out.println("       unmark <number>");
+            throw new AgentCTException(getInvalidCommandMessage());
         }
         System.out.println(separator);
         return taskCount;
     }
 
-    /** Prints guidance when a task command does not contain a description. */
-    private static void printMissingDescriptionMessage() {
-        System.out.println("     Please provide a task description!");
-        System.out.println("     Format: todo <description>");
-        System.out.println("     Example: todo Play Video Games");
+    /** Returns guidance for a task command without a description. */
+    private static String getMissingDescriptionMessage() {
+        return "Please provide a task description!\n"
+                + "Format: todo <description>\n"
+                + "Example: todo Play Video Games";
+    }
+
+    /** Returns guidance for input that does not match a supported command. */
+    private static String getInvalidCommandMessage() {
+        return "Please enter a valid command!\n"
+                + "Examples:\n"
+                + "  todo <description>\n"
+                + "  deadline <description> /by <time>\n"
+                + "  event <description> /from <time> /to <time>\n"
+                + "  list\n"
+                + "  mark <number>\n"
+                + "  unmark <number>";
+    }
+
+    /** Prints each line of an exception message with the chatbot's indentation. */
+    private static void printErrorMessage(String message) {
+        for (String line : message.split("\\R")) {
+            System.out.println("     " + line);
+        }
     }
 
     /** Prints all tasks in their numbered display format. */
