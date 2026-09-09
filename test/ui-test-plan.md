@@ -218,6 +218,148 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+### Test case 6: Preserve state across interleaved valid and invalid commands
+
+**Aim:** Verify that invalid commands and invalid task numbers do not add, remove, or alter tasks created by valid commands.
+
+**Inputs:**
+
+```text
+todo buy milk
+dance
+list
+mark 0
+mark 1
+unmark 99
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [T][ ] buy milk
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Please enter a valid command!
+     Examples:
+       todo <description>
+       deadline <description> /by <time>
+       event <description> /from <time> /to <time>
+       list
+       mark <number>
+       unmark <number>
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][ ] buy milk
+____________________________________________________________
+____________________________________________________________
+     Sorry, that task number does not exist.
+____________________________________________________________
+____________________________________________________________
+     Nice! I've marked this task as done:
+       [X] buy milk
+____________________________________________________________
+____________________________________________________________
+     Sorry, that task number does not exist.
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][X] buy milk
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
+### Test case 7: Reject malformed command formats
+
+**Aim:** Verify that incomplete task commands are rejected and do not affect the task list before or after a valid command.
+
+**Inputs:**
+
+```text
+deadline return book
+todo read notes
+event team meeting /from Monday
+list
+todo
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Please enter a valid command!
+     Examples:
+       todo <description>
+       deadline <description> /by <time>
+       event <description> /from <time> /to <time>
+       list
+       mark <number>
+       unmark <number>
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [T][ ] read notes
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Please enter a valid command!
+     Examples:
+       todo <description>
+       deadline <description> /by <time>
+       event <description> /from <time> /to <time>
+       list
+       mark <number>
+       unmark <number>
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][ ] read notes
+____________________________________________________________
+____________________________________________________________
+     Please provide a task description!
+     Format: todo <description>
+     Example: todo Play Video Games
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][ ] read notes
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
 ## Latest test session
 
 - Date: 2026-09-04
