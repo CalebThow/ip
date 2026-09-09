@@ -78,36 +78,57 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
-        } else if (command.equals("todo ")) {
-            //Handle case where task description is empty
-            System.out.println("     Please provide a task description!");
-            System.out.println("     Format: todo <description>");
-            System.out.println("     Example: todo Play Video Games");
-        } else if (command.startsWith("todo ")) {
-            addTask(tasks, taskCount, new Todo(command.substring(5)));
-            taskCount++;
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
+            String description = command.substring(4).trim();
+            if (description.isEmpty()) {
+                printMissingDescriptionMessage();
+            } else {
+                addTask(tasks, taskCount, new Todo(description));
+                taskCount++;
+            }
         } else if (command.startsWith("deadline ") && command.contains(" /by ")) {
             int markerIndex = command.indexOf(" /by ");
-            String description = command.substring(9, markerIndex);
-            String by = command.substring(markerIndex + 5);
-            addTask(tasks, taskCount, new Deadline(description, by));
-            taskCount++;
+            String description = command.substring(9, markerIndex).trim();
+            String by = command.substring(markerIndex + 5).trim();
+            if (description.isEmpty()) {
+                printMissingDescriptionMessage();
+            } else {
+                addTask(tasks, taskCount, new Deadline(description, by));
+                taskCount++;
+            }
         } else if (command.startsWith("event ") && command.contains(" /from ")
                 && command.contains(" /to ")) {
             int fromIndex = command.indexOf(" /from ");
             int toIndex = command.indexOf(" /to ", fromIndex);
-            String description = command.substring(6, fromIndex);
-            String from = command.substring(fromIndex + 7, toIndex);
-            String to = command.substring(toIndex + 5);
-            addTask(tasks, taskCount, new Event(description, from, to));
-            taskCount++;
+            String description = command.substring(6, fromIndex).trim();
+            String from = command.substring(fromIndex + 7, toIndex).trim();
+            String to = command.substring(toIndex + 5).trim();
+            if (description.isEmpty()) {
+                printMissingDescriptionMessage();
+            } else {
+                addTask(tasks, taskCount, new Event(description, from, to));
+                taskCount++;
+            }
         } else {
-            //Handle case where input entered does not match any existing command
+            // Reject input that does not match any supported command format.
             System.out.println("     Please enter a valid command!");
-            System.out.println("     Example: \"todo \", \"deadline \", \"event \", \"list \", \"mark \", \"unmark \"");
+            System.out.println("     Examples:");
+            System.out.println("       todo <description>");
+            System.out.println("       deadline <description> /by <time>");
+            System.out.println("       event <description> /from <time> /to <time>");
+            System.out.println("       list");
+            System.out.println("       mark <number>");
+            System.out.println("       unmark <number>");
         }
         System.out.println(separator);
         return taskCount;
+    }
+
+    /** Prints guidance when a task command does not contain a description. */
+    private static void printMissingDescriptionMessage() {
+        System.out.println("     Please provide a task description!");
+        System.out.println("     Format: todo <description>");
+        System.out.println("     Example: todo Play Video Games");
     }
 
     /** Prints all tasks in their numbered display format. */

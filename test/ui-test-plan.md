@@ -120,7 +120,13 @@ How may I help you?
 ____________________________________________________________
 ____________________________________________________________
      Please enter a valid command!
-     Example: "todo ", "deadline ", "event ", "list ", "mark ", "unmark "
+     Examples:
+       todo <description>
+       deadline <description> /by <time>
+       event <description> /from <time> /to <time>
+       list
+       mark <number>
+       unmark <number>
 ____________________________________________________________
      Here are the tasks in your list:
 ____________________________________________________________
@@ -159,6 +165,51 @@ ____________________________________________________________
      Please provide a task description!
      Format: todo <description>
      Example: todo Play Video Games
+____________________________________________________________
+     Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
+### Test case 5: Reject deadline and event commands without descriptions
+
+**Aim:** Verify that deadline and event commands with blank descriptions are rejected without adding tasks.
+
+**Inputs:**
+
+```text
+deadline  /by Sunday
+event  /from Monday /to Tuesday
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Please provide a task description!
+     Format: todo <description>
+     Example: todo Play Video Games
+____________________________________________________________
+____________________________________________________________
+     Please provide a task description!
+     Format: todo <description>
+     Example: todo Play Video Games
+____________________________________________________________
 ____________________________________________________________
      Here are the tasks in your list:
 ____________________________________________________________
