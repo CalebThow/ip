@@ -1,4 +1,4 @@
-package chatbot;
+package chatbot.task;
 
 /**
  * Represents a task in the task list.

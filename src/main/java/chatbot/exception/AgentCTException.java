@@ -1,4 +1,4 @@
-package chatbot;
+package chatbot.exception;
 
 /**
  * Represents an error caused by invalid input to the AgentCT chatbot.

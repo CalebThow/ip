@@ -1,4 +1,4 @@
-package chatbot;
+package chatbot.task;
 
 /** Represents a task without date or time information. */
 public class Todo extends Task {
