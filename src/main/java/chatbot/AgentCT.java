@@ -3,6 +3,7 @@ package chatbot;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -193,9 +194,9 @@ public class AgentCT {
             List<String> lines = tasks.stream()
                     .map(AgentCT::formatTaskForStorage)
                     .collect(Collectors.toList());
-            Files.write(SAVE_FILE, lines);
+            Files.write(SAVE_FILE, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
-            throw new IllegalStateException("Unable to save tasks.", exception);
+            System.err.println("Warning: Unable to save tasks to " + SAVE_FILE + ".");
         }
     }
 
@@ -209,7 +210,7 @@ public class AgentCT {
             return tasks;
         }
         try {
-            for (String line : Files.readAllLines(SAVE_FILE)) {
+            for (String line : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
                 Task task = parseTask(line);
                 if (task != null) {
                     tasks.add(task);
@@ -227,16 +228,21 @@ public class AgentCT {
      * @return the parsed task, or null for malformed data
      */
     private static Task parseTask(String line) {
-        String[] fields = line.split("\\s*\\|\\s*", -1);
-        if (fields.length < 3 || (!fields[1].equals("0") && !fields[1].equals("1"))) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+        String[] fields = splitStorageLine(line);
+        if (fields.length < 3 || fields[2].isBlank()
+                || (!fields[1].equals("0") && !fields[1].equals("1"))) {
             return null;
         }
         Task task;
         if (fields[0].equals("T") && fields.length == 3) {
             task = new Todo(fields[2]);
-        } else if (fields[0].equals("D") && fields.length == 4) {
+        } else if (fields[0].equals("D") && fields.length == 4 && !fields[3].isBlank()) {
             task = new Deadline(fields[2], fields[3]);
-        } else if (fields[0].equals("E") && fields.length == 5) {
+        } else if (fields[0].equals("E") && fields.length == 5
+                && !fields[3].isBlank() && !fields[4].isBlank()) {
             task = new Event(fields[2], fields[3], fields[4]);
         } else {
             return null;
@@ -247,20 +253,60 @@ public class AgentCT {
         return task;
     }
 
+    /** Splits a storage line while allowing escaped pipes and backslashes in text.
+     *
+     * @param line the storage line
+     * @return the decoded fields
+     */
+    private static String[] splitStorageLine(String line) {
+        List<String> fields = new ArrayList<>();
+        StringBuilder field = new StringBuilder();
+        boolean isEscaped = false;
+        for (char character : line.toCharArray()) {
+            if (isEscaped) {
+                field.append(character);
+                isEscaped = false;
+            } else if (character == '\\') {
+                isEscaped = true;
+            } else if (character == '|') {
+                fields.add(field.toString().trim());
+                field.setLength(0);
+            } else {
+                field.append(character);
+            }
+        }
+        if (isEscaped) {
+            field.append('\\');
+        }
+        fields.add(field.toString().trim());
+        return fields.toArray(String[]::new);
+    }
+
     /** Formats a task as one pipe-delimited line for the save file.
      *
      * @param task the task to format
      * @return the storage representation of the task
      */
     private static String formatTaskForStorage(Task task) {
-        String timing = "";
+        StringBuilder line = new StringBuilder(task.getTaskType())
+                .append(" | ").append(task.isDone() ? "1" : "0")
+                .append(" | ").append(escapeStorageValue(task.getDescription()));
         if (task instanceof Deadline deadline) {
-            timing = deadline.getBy();
+            line.append(" | ").append(escapeStorageValue(deadline.getBy()));
         } else if (task instanceof Event event) {
-            timing = event.getFrom() + " | " + event.getTo();
+            line.append(" | ").append(escapeStorageValue(event.getFrom()))
+                    .append(" | ").append(escapeStorageValue(event.getTo()));
         }
-        return task.getTaskType() + " | " + (task.isDone() ? "1" : "0") + " | "
-                + task.getDescription() + (timing.isEmpty() ? "" : " | " + timing);
+        return line.toString();
+    }
+
+    /** Escapes characters that have meaning in the storage format.
+     *
+     * @param value the value to escape
+     * @return the escaped value
+     */
+    private static String escapeStorageValue(String value) {
+        return value.replace("\\", "\\\\").replace("|", "\\|");
     }
 }
     

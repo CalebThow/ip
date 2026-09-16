@@ -545,6 +545,26 @@ list
 bye
 ```
 
+### Test case 10: Handle persistence edge cases
+
+**Aim:** Verify that escaped delimiters in task text round-trip correctly and that startup remains usable with malformed records.
+
+**Inputs:**
+
+```text
+todo read | notes
+list
+bye
+```
+
+**Expected relevant output:**
+
+```text
+     4.[T][ ] read | notes
+```
+
+The save file stores the pipe as `\|`, and malformed or blank records are skipped.
+
 **Expected save file:**
 
 ```text
