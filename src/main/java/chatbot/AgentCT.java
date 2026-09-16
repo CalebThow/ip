@@ -38,7 +38,7 @@ public class AgentCT {
         System.out.println("How may I help you?");
         System.out.println(separator);
 
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = loadTasks();
         Scanner scanner = new Scanner(System.in);
         runCommandLoop(scanner, tasks, separator);
         scanner.close();
@@ -46,7 +46,7 @@ public class AgentCT {
 
     /** Processes chatbot commands until the user ends the session. */
     private static void runCommandLoop(Scanner scanner, List<Task> tasks, String separator) {
-        int taskCount = 0;
+        int taskCount = tasks.size();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             if (command.equals("bye")) {
@@ -197,6 +197,54 @@ public class AgentCT {
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to save tasks.", exception);
         }
+    }
+
+    /** Loads saved tasks when the chatbot starts. Missing or malformed files are ignored.
+     *
+     * @return the saved tasks, or an empty list when no usable save data exists
+     */
+    private static List<Task> loadTasks() {
+        List<Task> tasks = new ArrayList<>();
+        if (!Files.exists(SAVE_FILE)) {
+            return tasks;
+        }
+        try {
+            for (String line : Files.readAllLines(SAVE_FILE)) {
+                Task task = parseTask(line);
+                if (task != null) {
+                    tasks.add(task);
+                }
+            }
+        } catch (IOException exception) {
+            return tasks;
+        }
+        return tasks;
+    }
+
+    /** Converts one saved line into a task.
+     *
+     * @param line the saved task line
+     * @return the parsed task, or null for malformed data
+     */
+    private static Task parseTask(String line) {
+        String[] fields = line.split("\\s*\\|\\s*", -1);
+        if (fields.length < 3 || (!fields[1].equals("0") && !fields[1].equals("1"))) {
+            return null;
+        }
+        Task task;
+        if (fields[0].equals("T") && fields.length == 3) {
+            task = new Todo(fields[2]);
+        } else if (fields[0].equals("D") && fields.length == 4) {
+            task = new Deadline(fields[2], fields[3]);
+        } else if (fields[0].equals("E") && fields.length == 5) {
+            task = new Event(fields[2], fields[3], fields[4]);
+        } else {
+            return null;
+        }
+        if (fields[1].equals("1")) {
+            task.markAsDone();
+        }
+        return task;
     }
 
     /** Formats a task as one pipe-delimited line for the save file.

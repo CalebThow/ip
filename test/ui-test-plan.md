@@ -534,6 +534,34 @@ ____________________________________________________________
 RESULT: FAILED
 ```
 
+### Test case 9: Load tasks from disk
+
+**Aim:** Verify that saved tasks are loaded when the chatbot starts, including completion status and task-specific timing information.
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+**Expected save file:**
+
+```text
+T | 1 | buy milk
+D | 0 | return book | Sunday
+E | 0 | project meeting | Mon 2pm | 4pm
+```
+
+**Expected relevant output:**
+
+```text
+     Here are the tasks in your list:
+     1.[T][X] buy milk
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
 ### Package-structure verification session
 
 - Date: 2026-09-10
@@ -561,4 +589,21 @@ ____________________________________________________________
 ____________________________________________________________
 RESULT: PASSED
 ALL TESTS PASSED (1)
+```
+
+### Latest test session
+
+- Date: 2026-09-17
+- Result: Java 25 compilation passed and manual load verification passed. The bundled runner stopped on its existing package-launch fixture due to an expected-output mismatch unrelated to loading.
+
+```text
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+list
+bye
+[output]
+     Here are the tasks in your list:
+     1.[T][X] buy milk
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
