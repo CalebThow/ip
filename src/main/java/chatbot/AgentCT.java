@@ -1,19 +1,25 @@
 package chatbot;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import chatbot.exception.AgentCTException;
 import chatbot.task.Deadline;
 import chatbot.task.Event;
 import chatbot.task.Task;
 import chatbot.task.Todo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 /**
  * Runs the AgentCT command-line chatbot.
  */
 public class AgentCT {
+    private static final Path SAVE_FILE = Path.of("data", "duke.txt");
+
     /** Runs the command-line chatbot. */
     public static void main(String[] args) {
         final String separator = "____________________________________________________________";
@@ -75,6 +81,7 @@ public class AgentCT {
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsDone();
+                saveTasks(tasks);
                 System.out.println("     Nice! I've marked this task as done:");
                 System.out.println("       [X] " + tasks.get(taskIndex).getDescription());
             } else {
@@ -85,6 +92,7 @@ public class AgentCT {
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsNotDone();
+                saveTasks(tasks);
                 System.out.println("     OK, I've marked this task as not done yet:");
                 System.out.println("       [ ] " + tasks.get(taskIndex).getDescription());
             } else {
@@ -96,6 +104,7 @@ public class AgentCT {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Todo(description));
+                saveTasks(tasks);
                 taskCount++;
             }
         } else if (command.startsWith("deadline ") && command.contains(" /by ")) {
@@ -106,6 +115,7 @@ public class AgentCT {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Deadline(description, by));
+                saveTasks(tasks);
                 taskCount++;
             }
         } else if (command.startsWith("event ") && command.contains(" /from ")
@@ -119,6 +129,7 @@ public class AgentCT {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
                 addTask(tasks, taskCount, new Event(description, from, to));
+                saveTasks(tasks);
                 taskCount++;
             }
         } else {
@@ -170,6 +181,38 @@ public class AgentCT {
         System.out.println("     Got it. I've added this task:");
         System.out.println("       [" + task.getTaskType() + "][ ] " + task.getDisplayText());
         System.out.println("     Now you have " + (taskCount + 1) + " tasks in the list.");
+    }
+
+    /** Saves the current task list after a successful change.
+     *
+     * @param tasks the current task list
+     */
+    private static void saveTasks(List<Task> tasks) {
+        try {
+            Files.createDirectories(SAVE_FILE.getParent());
+            List<String> lines = tasks.stream()
+                    .map(AgentCT::formatTaskForStorage)
+                    .collect(Collectors.toList());
+            Files.write(SAVE_FILE, lines);
+        } catch (IOException exception) {
+            throw new IllegalStateException("Unable to save tasks.", exception);
+        }
+    }
+
+    /** Formats a task as one pipe-delimited line for the save file.
+     *
+     * @param task the task to format
+     * @return the storage representation of the task
+     */
+    private static String formatTaskForStorage(Task task) {
+        String timing = "";
+        if (task instanceof Deadline deadline) {
+            timing = deadline.getBy();
+        } else if (task instanceof Event event) {
+            timing = event.getFrom() + " | " + event.getTo();
+        }
+        return task.getTaskType() + " | " + (task.isDone() ? "1" : "0") + " | "
+                + task.getDescription() + (timing.isEmpty() ? "" : " | " + timing);
     }
 }
     

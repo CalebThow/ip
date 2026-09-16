@@ -40,6 +40,14 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
+    /** Returns whether this task has been completed.
+     *
+     * @return true if this task is done
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
     /**
      * Returns the task description.
      *
