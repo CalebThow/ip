@@ -90,6 +90,19 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
+        } else if (command.matches("delete \\d+")) {
+            int taskNumber = Integer.parseInt(command.substring(7));
+            if (taskNumber >= 1 && taskNumber <= taskCount) {
+                int taskIndex = taskNumber - 1;
+                Task deletedTask = tasks.remove(taskIndex);
+                taskCount--;
+                System.out.println("     Noted. I've removed this task:");
+                System.out.println("       [" + deletedTask.getTaskType() + "]["
+                        + deletedTask.getStatusIcon() + "] " + deletedTask.getDisplayText());
+                System.out.println("     Now you have " + taskCount + " tasks in the list.");
+            } else {
+                System.out.println("     Sorry, that task number does not exist.");
+            }
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring(4).trim();
             if (description.isEmpty()) {
@@ -144,7 +157,8 @@ public class AgentCT {
                 + "  event <description> /from <time> /to <time>\n"
                 + "  list\n"
                 + "  mark <number>\n"
-                + "  unmark <number>";
+                + "  unmark <number>\n"
+                + "  delete <number>";
     }
 
     /** Prints each line of an exception message with the chatbot's indentation. */

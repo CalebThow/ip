@@ -360,6 +360,58 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+### Test case 8: Delete a task and renumber the remaining list
+
+**Aim:** Verify that a valid delete command removes the selected task, updates the task count, and leaves the remaining list usable.
+
+**Inputs:**
+
+```text
+todo borrow book
+deadline return book /by Sunday
+delete 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [T][ ] borrow book
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] return book (by: Sunday)
+     Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Noted. I've removed this task:
+       [T][ ] borrow book
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
 ## Latest test session
 
 - Date: 2026-09-04
@@ -444,6 +496,58 @@ ____________________________________________________________
      Goodbye! Hope you have an amazing day!
 ____________________________________________________________
 RESULT: PASSED
+```
+
+### Delete feature verification session
+
+- Date: 2026-09-17
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Delete a task and renumber the remaining list ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+todo borrow book
+deadline return book /by Sunday
+delete 1
+list
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [T][ ] borrow book
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] return book (by: Sunday)
+     Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Noted. I've removed this task:
+       [T][ ] borrow book
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
 ```
 
 ### Package-structure verification session
