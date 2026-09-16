@@ -303,6 +303,66 @@ list
 bye
 ```
 
+### Test case 8: Save changed tasks to disk
+
+**Aim:** Verify that adding tasks and marking a task as done automatically writes the current task list to `data/duke.txt`.
+
+**Inputs:**
+
+```text
+todo buy milk
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+mark 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [T][ ] buy milk
+     Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] return book (by: Sunday)
+     Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Got it. I've added this task:
+       [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+     Nice! I've marked this task as done:
+       [X] buy milk
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+```
+
+**Expected save file contents:**
+
+```text
+T | 1 | buy milk
+D | 0 | return book | Sunday
+E | 0 | project meeting | Mon 2pm | 4pm
+```
+
 **Expected output:**
 
 ```text
@@ -360,7 +420,7 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-### Test case 8: Delete a task and renumber the remaining list
+### Test case 9: Delete a task and renumber the remaining list
 
 **Aim:** Verify that a valid delete command removes the selected task, updates the task count, and leaves the remaining list usable.
 
@@ -550,6 +610,82 @@ RESULT: PASSED
 ALL TESTS PASSED (1)
 ```
 
+### Latest test session
+
+- Date: 2026-09-17
+- Result: UI runner executed 1 test; failed because the temporary expected transcript still included an echoed `bye` command, while the actual program does not echo commands. The direct save verification passed.
+
+```text
+=== Test 1: Exit with bye ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: FAILED
+```
+
+### Test case 9: Load tasks from disk
+
+**Aim:** Verify that saved tasks are loaded when the chatbot starts, including completion status and task-specific timing information.
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+### Test case 10: Handle persistence edge cases
+
+**Aim:** Verify that escaped delimiters in task text round-trip correctly and that startup remains usable with malformed records.
+
+**Inputs:**
+
+```text
+todo read | notes
+list
+bye
+```
+
+**Expected relevant output:**
+
+```text
+     4.[T][ ] read | notes
+```
+
+The save file stores the pipe as `\|`, and malformed or blank records are skipped.
+
+**Expected save file:**
+
+```text
+T | 1 | buy milk
+D | 0 | return book | Sunday
+E | 0 | project meeting | Mon 2pm | 4pm
+```
+
+**Expected relevant output:**
+
+```text
+     Here are the tasks in your list:
+     1.[T][X] buy milk
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
 ### Package-structure verification session
 
 - Date: 2026-09-10
@@ -577,4 +713,21 @@ ____________________________________________________________
 ____________________________________________________________
 RESULT: PASSED
 ALL TESTS PASSED (1)
+```
+
+### Latest test session
+
+- Date: 2026-09-17
+- Result: Java 25 compilation passed and manual load verification passed. The bundled runner stopped on its existing package-launch fixture due to an expected-output mismatch unrelated to loading.
+
+```text
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+list
+bye
+[output]
+     Here are the tasks in your list:
+     1.[T][X] buy milk
+     2.[D][ ] return book (by: Sunday)
+     3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```

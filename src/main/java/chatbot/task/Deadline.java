@@ -10,6 +10,14 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /** Returns the deadline time for persistence.
+     *
+     * @return the deadline time
+     */
+    public String getBy() {
+        return by;
+    }
+
     @Override
     public String getTaskType() {
         return "D";
