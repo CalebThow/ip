@@ -472,6 +472,12 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+**Expected save file after the delete:**
+
+```text
+D | 0 | return book | Sunday
+```
+
 ## Latest test session
 
 - Date: 2026-09-04
@@ -713,6 +719,22 @@ ____________________________________________________________
 ____________________________________________________________
 RESULT: PASSED
 ALL TESTS PASSED (1)
+```
+
+### Gradle configuration verification session
+
+- Date: 2026-09-17
+- Result: Java 25 compilation passed. The UI runner executed the existing package and delete fixtures; both failed because of pre-existing expected-output/persisted-data issues, not because of the Gradle configuration. No console behavior was changed.
+
+```text
+$ java -version
+java version "25.0.4.1" 2026-08-18 LTS
+$ javac -d _temp/test-ui-classes <all src/main/java/*.java>
+RESULT: PASSED
+$ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/package-tests.json
+RESULT: FAILED (expected and actual output differed despite identical visible lines)
+$ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/delete-ui-tests.json
+RESULT: FAILED (data/duke.txt already contained persisted tasks, so the fixture did not start empty)
 ```
 
 ### Latest test session

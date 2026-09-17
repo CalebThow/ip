@@ -105,6 +105,7 @@ public class AgentCT {
                 int taskIndex = taskNumber - 1;
                 Task deletedTask = tasks.remove(taskIndex);
                 taskCount--;
+                saveTasks(tasks);
                 System.out.println("     Noted. I've removed this task:");
                 System.out.println("       [" + deletedTask.getTaskType() + "]["
                         + deletedTask.getStatusIcon() + "] " + deletedTask.getDisplayText());
