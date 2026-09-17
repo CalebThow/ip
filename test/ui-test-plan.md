@@ -305,7 +305,7 @@ bye
 
 ### Test case 8: Save changed tasks to disk
 
-**Aim:** Verify that adding tasks and marking a task as done automatically writes the current task list to `data/duke.txt`.
+**Aim:** Verify that adding tasks and marking a task as done automatically writes the current task list to `data/agentct.txt`.
 
 **Inputs:**
 
@@ -734,7 +734,7 @@ RESULT: PASSED
 $ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/package-tests.json
 RESULT: FAILED (expected and actual output differed despite identical visible lines)
 $ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/delete-ui-tests.json
-RESULT: FAILED (data/duke.txt already contained persisted tasks, so the fixture did not start empty)
+RESULT: FAILED (data/agentct.txt already contained persisted tasks, so the fixture did not start empty)
 ```
 
 ### Latest test session

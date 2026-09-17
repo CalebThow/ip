@@ -19,7 +19,7 @@ import chatbot.task.Todo;
  * Runs the AgentCT command-line chatbot.
  */
 public class AgentCT {
-    private static final Path SAVE_FILE = Path.of("data", "duke.txt");
+    private static final Path SAVE_FILE = Path.of("data", "agentct.txt");
 
     /** Runs the command-line chatbot. */
     public static void main(String[] args) {
