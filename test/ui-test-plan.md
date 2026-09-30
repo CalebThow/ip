@@ -19,6 +19,122 @@
 bye
 ```
 
+### Command loop finalization verification session
+
+- Date: 2026-09-30
+- Result: Java 25 compilation passed and the direct executable parser UI fixture passed. The command loop now centralizes response-divider cleanup in `finally`; the visible `bye` transcript is unchanged.
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Command loop extraction verification session
+
+- Date: 2026-09-30
+- Result: Java 25 compilation passed and the direct executable parser UI fixture passed after moving command-loop orchestration into `CommandLoop`. The visible `bye` transcript is unchanged.
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Parser dependency injection verification session
+
+- Date: 2026-09-30
+- Result: Java 25 compilation passed and the direct executable parser UI fixture passed after making `Parser` an explicit `CommandLoop` dependency. The visible `bye` transcript is unchanged.
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Startup responsibility extraction verification session
+
+- Date: 2026-09-30
+- Result: Java 25 compilation passed after recreating the temporary class output directory, and the direct executable parser UI fixture passed. Startup wiring is now handled by `AgentCTApplication`; the visible `bye` transcript is unchanged.
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
 **Expected output:**
 
 ```text
@@ -714,6 +830,441 @@ Welcome! I'm AgentCT.
 How may I help you?
 ____________________________________________________________
      bye
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### UI extraction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit with bye after Ui extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Storage extraction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit with bye after Storage extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Parser extraction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit with bye after Parser extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### TaskList extraction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit with bye after TaskList extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Command abstraction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after Command abstraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### ListCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after ListCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### AddCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after AddCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### DeleteCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after DeleteCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### MarkCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after MarkCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### UnmarkCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after UnmarkCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Parser executable-command bridge verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Parser executable-command bridge ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Parser add-command construction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Parser add-command construction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Parser complete command construction verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Parser complete command construction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Command-only AgentCT loop verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Command-only AgentCT loop ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
+### Direct executable parser verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
 ____________________________________________________________
      Goodbye! Hope you have an amazing day!
 ____________________________________________________________
