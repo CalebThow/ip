@@ -23,20 +23,23 @@ public class AgentCT {
         String command;
         Parser parser = new Parser();
         while ((command = ui.readCommand(scanner)) != null) {
+            Command executableCommand = null;
             try {
-                Command executableCommand = parser.parseCommand(command);
+                executableCommand = parser.parseCommand(command);
                 if (!executableCommand.isExit()) {
                     ui.showSeparator();
                 }
                 executableCommand.execute(tasks, ui, storage);
-                if (executableCommand.isExit()) {
-                    break;
-                }
-                ui.showSeparator();
             } catch (AgentCTException exception) {
                 ui.showSeparator();
                 ui.showError(exception.getMessage());
-                ui.showSeparator();
+            } finally {
+                if (executableCommand == null || !executableCommand.isExit()) {
+                    ui.showSeparator();
+                }
+            }
+            if (executableCommand != null && executableCommand.isExit()) {
+                break;
             }
         }
     }
