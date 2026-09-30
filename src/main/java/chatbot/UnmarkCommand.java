@@ -14,6 +14,13 @@ public class UnmarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /** Marks the selected task as not done and saves the updated list.
+     *
+     * @param tasks task list to update
+     * @param ui interface used to display confirmation
+     * @param storage storage used to save the updated list
+     * @throws AgentCTException when the task number is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws AgentCTException {
         if (taskNumber < 1 || taskNumber > tasks.size()) {

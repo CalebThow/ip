@@ -5,7 +5,12 @@ public class Event extends Task {
     private final String from;
     private final String to;
 
-    /** Creates a pending event task. */
+    /** Creates a pending event task.
+     *
+     * @param description task description
+     * @param from event start time
+     * @param to event end time
+     */
     public Event(String description, String from, String to) {
         super(description);
         this.from = from;
@@ -28,11 +33,19 @@ public class Event extends Task {
         return to;
     }
 
+    /** Returns the event task type identifier.
+     *
+     * @return the event type identifier
+     */
     @Override
     public String getTaskType() {
         return "E";
     }
 
+    /** Returns the description together with the event times.
+     *
+     * @return formatted event text
+     */
     @Override
     public String getDisplayText() {
         return super.getDisplayText() + " (from: " + from + " to: " + to + ")";
