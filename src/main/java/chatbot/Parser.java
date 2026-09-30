@@ -9,6 +9,21 @@ public class Parser {
         LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT
     }
 
+    /** Parses commands that already have executable command objects.
+     *
+     * @param command raw user command
+     * @return executable command, or null when the command still uses the legacy path
+     */
+    public Command parseCommand(String command) {
+        if (command.equals("bye")) {
+            return new ExitCommand();
+        }
+        if (command.equals("list")) {
+            return new ListCommand();
+        }
+        return null;
+    }
+
     /** The result of parsing one user command. */
     public static class ParsedCommand {
         private final CommandType type;

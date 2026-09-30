@@ -28,18 +28,29 @@ public class AgentCT {
     private static void runCommandLoop(Scanner scanner, TaskList tasks, Ui ui, Storage storage) {
         int taskCount = tasks.size();
         String command;
+        Parser parser = new Parser();
         while ((command = ui.readCommand(scanner)) != null) {
-            if (command.equals("bye")) {
-                Command exitCommand = new ExitCommand();
+            Command executableCommand = parser.parseCommand(command);
+            if (executableCommand != null) {
                 try {
-                    exitCommand.execute(tasks, ui, storage);
+                    if (!executableCommand.isExit()) {
+                        ui.showSeparator();
+                    }
+                    executableCommand.execute(tasks, ui, storage);
+                    if (!executableCommand.isExit()) {
+                        ui.showSeparator();
+                    }
                 } catch (AgentCTException exception) {
                     ui.showError(exception.getMessage());
+                    ui.showSeparator();
                 }
-                break;
+                if (executableCommand.isExit()) {
+                    break;
+                }
+                continue;
             }
             try {
-                taskCount = processCommand(command, tasks, taskCount, ui, storage);
+                taskCount = processCommand(command, tasks, taskCount, ui, storage, parser);
             } catch (AgentCTException exception) {
                 ui.showError(exception.getMessage());
                 ui.showSeparator();
@@ -49,13 +60,13 @@ public class AgentCT {
 
     /** Processes one non-exit chatbot command and returns the updated task count. */
     private static int processCommand(String command, TaskList tasks, int taskCount, Ui ui,
-            Storage storage)
+            Storage storage, Parser parser)
             throws AgentCTException {
         ui.showSeparator();
-        Parser.ParsedCommand parsedCommand = new Parser().parse(command);
+        Parser.ParsedCommand parsedCommand = parser.parse(command);
 
         if (parsedCommand.getType() == Parser.CommandType.LIST) {
-            new ListCommand().execute(tasks, ui, storage);
+            throw new IllegalStateException("List command should be handled by Parser.parseCommand");
         } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
             new MarkCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
         } else if (parsedCommand.getType() == Parser.CommandType.UNMARK) {
