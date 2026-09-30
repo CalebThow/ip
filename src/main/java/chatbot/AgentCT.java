@@ -30,7 +30,12 @@ public class AgentCT {
         String command;
         while ((command = ui.readCommand(scanner)) != null) {
             if (command.equals("bye")) {
-                ui.showGoodbye();
+                Command exitCommand = new ExitCommand();
+                try {
+                    exitCommand.execute(tasks, ui, storage);
+                } catch (AgentCTException exception) {
+                    ui.showError(exception.getMessage());
+                }
                 break;
             }
             try {
