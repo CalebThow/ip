@@ -16,12 +16,13 @@ public class CommandLoop {
      * @param tasks task list to modify
      * @param ui user interaction handler
      * @param storage task persistence handler
+     * @param parser command parser
      */
-    public CommandLoop(TaskList tasks, Ui ui, Storage storage) {
+    public CommandLoop(TaskList tasks, Ui ui, Storage storage, Parser parser) {
         this.tasks = tasks;
         this.ui = ui;
         this.storage = storage;
-        parser = new Parser();
+        this.parser = parser;
     }
 
     /** Processes commands from the given input until exit or end of input.

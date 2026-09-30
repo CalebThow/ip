@@ -77,6 +77,35 @@ RESULT: PASSED
 ALL TESTS PASSED (1)
 ```
 
+### Parser dependency injection verification session
+
+- Date: 2026-09-30
+- Result: Java 25 compilation passed and the direct executable parser UI fixture passed after making `Parser` an explicit `CommandLoop` dependency. The visible `bye` transcript is unchanged.
+
+```text
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
 **Expected output:**
 
 ```text

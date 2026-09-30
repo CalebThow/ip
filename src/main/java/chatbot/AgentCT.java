@@ -12,7 +12,7 @@ public class AgentCT {
 
         TaskList tasks = new TaskList(storage.load());
         Scanner scanner = new Scanner(System.in);
-        new CommandLoop(tasks, ui, storage).run(scanner);
+        new CommandLoop(tasks, ui, storage, new Parser()).run(scanner);
         scanner.close();
     }
 }
