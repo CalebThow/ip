@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import chatbot.exception.AgentCTException;
 import chatbot.task.Deadline;
@@ -23,68 +22,47 @@ public class AgentCT {
 
     /** Runs the command-line chatbot. */
     public static void main(String[] args) {
-        final String separator = "____________________________________________________________";
-        String banner =
-                    "    _                    _    ____ _____\n" +
-                    "   / \\   __ _  ___ _ __ | |_ / ___|_   _|\n" +
-                    "  / _ \\ / _` |/ _ \\ '_ \\| __| |     | |\n" +
-                    " / ___ \\ (_| |  __/ | | | |_  |___  | |\n" +
-                    "/_/   \\_\\__, |\\___|_| |_|\\__|\\____| |_|\n" +
-                    "        |___/";
-
-        System.out.println(separator);
-        System.out.println(banner);
-        System.out.println(separator);
-        System.out.println("Welcome! I'm AgentCT.");
-        System.out.println("How may I help you?");
-        System.out.println(separator);
+        Ui ui = new Ui();
+        ui.showWelcome();
 
         List<Task> tasks = loadTasks();
         Scanner scanner = new Scanner(System.in);
-        runCommandLoop(scanner, tasks, separator);
+        runCommandLoop(scanner, tasks, ui);
         scanner.close();
     }
 
     /** Processes chatbot commands until the user ends the session. */
-    private static void runCommandLoop(Scanner scanner, List<Task> tasks, String separator) {
+    private static void runCommandLoop(Scanner scanner, List<Task> tasks, Ui ui) {
         int taskCount = tasks.size();
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        String command;
+        while ((command = ui.readCommand(scanner)) != null) {
             if (command.equals("bye")) {
-                printGoodbye(separator);
+                ui.showGoodbye();
                 break;
             }
             try {
-                taskCount = processCommand(command, tasks, taskCount, separator);
+                taskCount = processCommand(command, tasks, taskCount, ui);
             } catch (AgentCTException exception) {
-                printErrorMessage(exception.getMessage());
-                System.out.println(separator);
+                ui.showError(exception.getMessage());
+                ui.showSeparator();
             }
         }
     }
 
-    /** Prints the response shown when the user ends the session. */
-    private static void printGoodbye(String separator) {
-        System.out.println(separator);
-        System.out.println("     Goodbye! Hope you have an amazing day!");
-        System.out.println(separator);
-    }
-
     /** Processes one non-exit chatbot command and returns the updated task count. */
-    private static int processCommand(String command, List<Task> tasks, int taskCount,
-            String separator) throws AgentCTException {
-        System.out.println(separator);
+    private static int processCommand(String command, List<Task> tasks, int taskCount, Ui ui)
+            throws AgentCTException {
+        ui.showSeparator();
 
         if (command.equals("list")) {
-            printTaskList(tasks);
+            ui.showTaskList(tasks);
         } else if (command.matches("mark \\d+")) {
             int taskNumber = Integer.parseInt(command.substring(5));
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsDone();
                 saveTasks(tasks);
-                System.out.println("     Nice! I've marked this task as done:");
-                System.out.println("       [X] " + tasks.get(taskIndex).getDescription());
+                ui.showTaskMarked(tasks.get(taskIndex));
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
@@ -94,8 +72,7 @@ public class AgentCT {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsNotDone();
                 saveTasks(tasks);
-                System.out.println("     OK, I've marked this task as not done yet:");
-                System.out.println("       [ ] " + tasks.get(taskIndex).getDescription());
+                ui.showTaskUnmarked(tasks.get(taskIndex));
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
@@ -106,10 +83,7 @@ public class AgentCT {
                 Task deletedTask = tasks.remove(taskIndex);
                 taskCount--;
                 saveTasks(tasks);
-                System.out.println("     Noted. I've removed this task:");
-                System.out.println("       [" + deletedTask.getTaskType() + "]["
-                        + deletedTask.getStatusIcon() + "] " + deletedTask.getDisplayText());
-                System.out.println("     Now you have " + taskCount + " tasks in the list.");
+                ui.showTaskDeleted(deletedTask, taskCount);
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
@@ -118,7 +92,7 @@ public class AgentCT {
             if (description.isEmpty()) {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
-                addTask(tasks, taskCount, new Todo(description));
+                addTask(tasks, taskCount, new Todo(description), ui);
                 saveTasks(tasks);
                 taskCount++;
             }
@@ -129,7 +103,7 @@ public class AgentCT {
             if (description.isEmpty()) {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
-                addTask(tasks, taskCount, new Deadline(description, by));
+                addTask(tasks, taskCount, new Deadline(description, by), ui);
                 saveTasks(tasks);
                 taskCount++;
             }
@@ -143,14 +117,14 @@ public class AgentCT {
             if (description.isEmpty()) {
                 throw new AgentCTException(getMissingDescriptionMessage());
             } else {
-                addTask(tasks, taskCount, new Event(description, from, to));
+                addTask(tasks, taskCount, new Event(description, from, to), ui);
                 saveTasks(tasks);
                 taskCount++;
             }
         } else {
             throw new AgentCTException(getInvalidCommandMessage());
         }
-        System.out.println(separator);
+        ui.showSeparator();
         return taskCount;
     }
 
@@ -174,29 +148,10 @@ public class AgentCT {
                 + "  delete <number>";
     }
 
-    /** Prints each line of an exception message with the chatbot's indentation. */
-    private static void printErrorMessage(String message) {
-        for (String line : message.split("\\R")) {
-            System.out.println("     " + line);
-        }
-    }
-
-    /** Prints all tasks in their numbered display format. */
-    private static void printTaskList(List<Task> tasks) {
-        System.out.println("     Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            System.out.println("     " + (i + 1) + ".[" + task.getTaskType() + "]["
-                    + task.getStatusIcon() + "] " + task.getDisplayText());
-        }
-    }
-
     /** Adds a task and prints the confirmation shared by task commands. */
-    private static void addTask(List<Task> tasks, int taskCount, Task task) {
+    private static void addTask(List<Task> tasks, int taskCount, Task task, Ui ui) {
         tasks.add(task);
-        System.out.println("     Got it. I've added this task:");
-        System.out.println("       [" + task.getTaskType() + "][ ] " + task.getDisplayText());
-        System.out.println("     Now you have " + (taskCount + 1) + " tasks in the list.");
+        ui.showTaskAdded(task, taskCount + 1);
     }
 
     /** Saves the current task list after a successful change.
@@ -206,9 +161,7 @@ public class AgentCT {
     private static void saveTasks(List<Task> tasks) {
         try {
             Files.createDirectories(SAVE_FILE.getParent());
-            List<String> lines = tasks.stream()
-                    .map(AgentCT::formatTaskForStorage)
-                    .collect(Collectors.toList());
+            List<String> lines = tasks.stream().map(AgentCT::formatTaskForStorage).toList();
             Files.write(SAVE_FILE, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
             System.err.println("Warning: Unable to save tasks to " + SAVE_FILE + ".");
