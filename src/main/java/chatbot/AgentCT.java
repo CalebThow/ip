@@ -77,16 +77,8 @@ public class AgentCT {
                 System.out.println("     Sorry, that task number does not exist.");
             }
         } else if (parsedCommand.getType() == Parser.CommandType.DELETE) {
-            int taskNumber = parsedCommand.getTaskNumber();
-            if (taskNumber >= 1 && taskNumber <= taskCount) {
-                int taskIndex = taskNumber - 1;
-                Task deletedTask = tasks.remove(taskIndex);
-                taskCount--;
-                storage.save(tasks.asList());
-                ui.showTaskDeleted(deletedTask, taskCount);
-            } else {
-                System.out.println("     Sorry, that task number does not exist.");
-            }
+            new DeleteCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
+            taskCount--;
         } else if (parsedCommand.getType() == Parser.CommandType.TODO) {
             new AddCommand(new Todo(parsedCommand.getDescription())).execute(tasks, ui, storage);
             taskCount++;
