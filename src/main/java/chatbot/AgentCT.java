@@ -3,14 +3,8 @@ package chatbot;
 import java.util.Scanner;
 
 import chatbot.exception.AgentCTException;
-import chatbot.task.Task;
-import chatbot.task.Todo;
-import chatbot.task.Deadline;
-import chatbot.task.Event;
 
-/**
- * Runs the AgentCT command-line chatbot.
- */
+/** Runs the AgentCT command-line chatbot. */
 public class AgentCT {
     /** Runs the command-line chatbot. */
     public static void main(String[] args) {
@@ -26,69 +20,24 @@ public class AgentCT {
 
     /** Processes chatbot commands until the user ends the session. */
     private static void runCommandLoop(Scanner scanner, TaskList tasks, Ui ui, Storage storage) {
-        int taskCount = tasks.size();
         String command;
         Parser parser = new Parser();
         while ((command = ui.readCommand(scanner)) != null) {
-            Command executableCommand = parser.parseCommand(command);
-            if (executableCommand != null) {
-                try {
-                    if (!executableCommand.isExit()) {
-                        ui.showSeparator();
-                    }
-                    executableCommand.execute(tasks, ui, storage);
-                    if (!executableCommand.isExit()) {
-                        ui.showSeparator();
-                    }
-                } catch (AgentCTException exception) {
-                    ui.showError(exception.getMessage());
+            try {
+                Command executableCommand = parser.parseCommand(command);
+                if (!executableCommand.isExit()) {
                     ui.showSeparator();
                 }
+                executableCommand.execute(tasks, ui, storage);
                 if (executableCommand.isExit()) {
                     break;
                 }
-                continue;
-            }
-            try {
-                taskCount = processCommand(command, tasks, taskCount, ui, storage, parser);
+                ui.showSeparator();
             } catch (AgentCTException exception) {
+                ui.showSeparator();
                 ui.showError(exception.getMessage());
                 ui.showSeparator();
             }
         }
     }
-
-    /** Processes one non-exit chatbot command and returns the updated task count. */
-    private static int processCommand(String command, TaskList tasks, int taskCount, Ui ui,
-            Storage storage, Parser parser)
-            throws AgentCTException {
-        ui.showSeparator();
-        Parser.ParsedCommand parsedCommand = parser.parse(command);
-
-        if (parsedCommand.getType() == Parser.CommandType.LIST) {
-            throw new IllegalStateException("List command should be handled by Parser.parseCommand");
-        } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
-            new MarkCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
-        } else if (parsedCommand.getType() == Parser.CommandType.UNMARK) {
-            new UnmarkCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
-        } else if (parsedCommand.getType() == Parser.CommandType.DELETE) {
-            new DeleteCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
-            taskCount--;
-        } else if (parsedCommand.getType() == Parser.CommandType.TODO) {
-            new AddCommand(new Todo(parsedCommand.getDescription())).execute(tasks, ui, storage);
-            taskCount++;
-        } else if (parsedCommand.getType() == Parser.CommandType.DEADLINE) {
-            new AddCommand(new Deadline(parsedCommand.getDescription(),
-                    parsedCommand.getFirstTime())).execute(tasks, ui, storage);
-            taskCount++;
-        } else if (parsedCommand.getType() == Parser.CommandType.EVENT) {
-            new AddCommand(new Event(parsedCommand.getDescription(), parsedCommand.getFirstTime(),
-                    parsedCommand.getSecondTime())).execute(tasks, ui, storage);
-            taskCount++;
-        }
-        ui.showSeparator();
-        return taskCount;
-    }
-
 }
-    

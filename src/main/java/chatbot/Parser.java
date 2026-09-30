@@ -17,19 +17,14 @@ public class Parser {
      * @param command raw user command
      * @return executable command, or null when the command still uses the legacy path
      */
-    public Command parseCommand(String command) {
+    public Command parseCommand(String command) throws AgentCTException {
         if (command.equals("bye")) {
             return new ExitCommand();
         }
         if (command.equals("list")) {
             return new ListCommand();
         }
-        ParsedCommand parsedCommand;
-        try {
-            parsedCommand = parse(command);
-        } catch (AgentCTException exception) {
-            return null;
-        }
+        ParsedCommand parsedCommand = parse(command);
         if (parsedCommand.getType() == CommandType.TODO) {
             return new AddCommand(new Todo(parsedCommand.getDescription()));
         }
