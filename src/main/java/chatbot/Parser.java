@@ -41,6 +41,15 @@ public class Parser {
             return new AddCommand(new Event(parsedCommand.getDescription(),
                     parsedCommand.getFirstTime(), parsedCommand.getSecondTime()));
         }
+        if (parsedCommand.getType() == CommandType.DELETE) {
+            return new DeleteCommand(parsedCommand.getTaskNumber());
+        }
+        if (parsedCommand.getType() == CommandType.MARK) {
+            return new MarkCommand(parsedCommand.getTaskNumber());
+        }
+        if (parsedCommand.getType() == CommandType.UNMARK) {
+            return new UnmarkCommand(parsedCommand.getTaskNumber());
+        }
         return null;
     }
 
