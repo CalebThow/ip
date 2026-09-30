@@ -55,7 +55,7 @@ public class AgentCT {
         Parser.ParsedCommand parsedCommand = new Parser().parse(command);
 
         if (parsedCommand.getType() == Parser.CommandType.LIST) {
-            ui.showTaskList(tasks.asList());
+            new ListCommand().execute(tasks, ui, storage);
         } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
             int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
