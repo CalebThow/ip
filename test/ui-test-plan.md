@@ -953,6 +953,35 @@ RESULT: PASSED
 ALL TESTS PASSED (1)
 ```
 
+### MarkCommand verification session
+
+- Date: 2026-09-30
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+=== Test 1: Exit command after MarkCommand extraction ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
 ### Gradle configuration verification session
 
 - Date: 2026-09-17

@@ -57,15 +57,7 @@ public class AgentCT {
         if (parsedCommand.getType() == Parser.CommandType.LIST) {
             new ListCommand().execute(tasks, ui, storage);
         } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
-            int taskNumber = parsedCommand.getTaskNumber();
-            if (taskNumber >= 1 && taskNumber <= taskCount) {
-                int taskIndex = taskNumber - 1;
-                tasks.get(taskIndex).markAsDone();
-                storage.save(tasks.asList());
-                ui.showTaskMarked(tasks.get(taskIndex));
-            } else {
-                System.out.println("     Sorry, that task number does not exist.");
-            }
+            new MarkCommand(parsedCommand.getTaskNumber()).execute(tasks, ui, storage);
         } else if (parsedCommand.getType() == Parser.CommandType.UNMARK) {
             int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
