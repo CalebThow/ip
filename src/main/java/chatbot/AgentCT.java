@@ -88,28 +88,19 @@ public class AgentCT {
                 System.out.println("     Sorry, that task number does not exist.");
             }
         } else if (parsedCommand.getType() == Parser.CommandType.TODO) {
-            addTask(tasks, taskCount, new Todo(parsedCommand.getDescription()), ui);
-            storage.save(tasks.asList());
+            new AddCommand(new Todo(parsedCommand.getDescription())).execute(tasks, ui, storage);
             taskCount++;
         } else if (parsedCommand.getType() == Parser.CommandType.DEADLINE) {
-            addTask(tasks, taskCount,
-                    new Deadline(parsedCommand.getDescription(), parsedCommand.getFirstTime()), ui);
-            storage.save(tasks.asList());
+            new AddCommand(new Deadline(parsedCommand.getDescription(),
+                    parsedCommand.getFirstTime())).execute(tasks, ui, storage);
             taskCount++;
         } else if (parsedCommand.getType() == Parser.CommandType.EVENT) {
-            addTask(tasks, taskCount, new Event(parsedCommand.getDescription(),
-                    parsedCommand.getFirstTime(), parsedCommand.getSecondTime()), ui);
-            storage.save(tasks.asList());
+            new AddCommand(new Event(parsedCommand.getDescription(), parsedCommand.getFirstTime(),
+                    parsedCommand.getSecondTime())).execute(tasks, ui, storage);
             taskCount++;
         }
         ui.showSeparator();
         return taskCount;
-    }
-
-    /** Adds a task and prints the confirmation shared by task commands. */
-    private static void addTask(TaskList tasks, int taskCount, Task task, Ui ui) {
-        tasks.add(task);
-        ui.showTaskAdded(task, taskCount + 1);
     }
 
 }
