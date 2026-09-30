@@ -1,6 +1,5 @@
 package chatbot;
 
-import java.util.List;
 import java.util.Scanner;
 
 import chatbot.exception.AgentCTException;
@@ -19,14 +18,14 @@ public class AgentCT {
         Storage storage = new Storage("data/agentct.txt");
         ui.showWelcome();
 
-        List<Task> tasks = storage.load();
+        TaskList tasks = new TaskList(storage.load());
         Scanner scanner = new Scanner(System.in);
         runCommandLoop(scanner, tasks, ui, storage);
         scanner.close();
     }
 
     /** Processes chatbot commands until the user ends the session. */
-    private static void runCommandLoop(Scanner scanner, List<Task> tasks, Ui ui, Storage storage) {
+    private static void runCommandLoop(Scanner scanner, TaskList tasks, Ui ui, Storage storage) {
         int taskCount = tasks.size();
         String command;
         while ((command = ui.readCommand(scanner)) != null) {
@@ -44,20 +43,20 @@ public class AgentCT {
     }
 
     /** Processes one non-exit chatbot command and returns the updated task count. */
-    private static int processCommand(String command, List<Task> tasks, int taskCount, Ui ui,
+    private static int processCommand(String command, TaskList tasks, int taskCount, Ui ui,
             Storage storage)
             throws AgentCTException {
         ui.showSeparator();
         Parser.ParsedCommand parsedCommand = new Parser().parse(command);
 
         if (parsedCommand.getType() == Parser.CommandType.LIST) {
-            ui.showTaskList(tasks);
+            ui.showTaskList(tasks.asList());
         } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
             int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsDone();
-                storage.save(tasks);
+                storage.save(tasks.asList());
                 ui.showTaskMarked(tasks.get(taskIndex));
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
@@ -67,7 +66,7 @@ public class AgentCT {
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsNotDone();
-                storage.save(tasks);
+                storage.save(tasks.asList());
                 ui.showTaskUnmarked(tasks.get(taskIndex));
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
@@ -78,24 +77,24 @@ public class AgentCT {
                 int taskIndex = taskNumber - 1;
                 Task deletedTask = tasks.remove(taskIndex);
                 taskCount--;
-                storage.save(tasks);
+                storage.save(tasks.asList());
                 ui.showTaskDeleted(deletedTask, taskCount);
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
         } else if (parsedCommand.getType() == Parser.CommandType.TODO) {
             addTask(tasks, taskCount, new Todo(parsedCommand.getDescription()), ui);
-            storage.save(tasks);
+            storage.save(tasks.asList());
             taskCount++;
         } else if (parsedCommand.getType() == Parser.CommandType.DEADLINE) {
             addTask(tasks, taskCount,
                     new Deadline(parsedCommand.getDescription(), parsedCommand.getFirstTime()), ui);
-            storage.save(tasks);
+            storage.save(tasks.asList());
             taskCount++;
         } else if (parsedCommand.getType() == Parser.CommandType.EVENT) {
             addTask(tasks, taskCount, new Event(parsedCommand.getDescription(),
                     parsedCommand.getFirstTime(), parsedCommand.getSecondTime()), ui);
-            storage.save(tasks);
+            storage.save(tasks.asList());
             taskCount++;
         }
         ui.showSeparator();
@@ -103,7 +102,7 @@ public class AgentCT {
     }
 
     /** Adds a task and prints the confirmation shared by task commands. */
-    private static void addTask(List<Task> tasks, int taskCount, Task task, Ui ui) {
+    private static void addTask(TaskList tasks, int taskCount, Task task, Ui ui) {
         tasks.add(task);
         ui.showTaskAdded(task, taskCount + 1);
     }
