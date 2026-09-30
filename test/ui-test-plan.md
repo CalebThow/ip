@@ -808,6 +808,48 @@ E | 0 | project meeting | Mon 2pm | 4pm
      3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
 
+### Find command verification session
+
+- Date: 2026-09-30
+- Aim: Verify that `find <keyword>` displays tasks whose descriptions contain the keyword,
+  preserves task formatting and order, and does not modify the task list.
+- Java version: Java 25.0.4.1
+- Result: Passed (1 test; Java 25 compilation and scripted UI verification)
+
+```text
+$ javac -d _temp/test-ui-classes <all src/main/java/*.java>
+Compilation completed.
+$ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/find-ui-tests.json
+=== Test 1: Find tasks by description keyword ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+find book
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[D][ ] return | book (by: June | 6pm)
+     2.[T][ ] borrow book
+     3.[D][ ] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
 ### Package-structure verification session
 
 - Date: 2026-09-10
