@@ -66,6 +66,10 @@ public class Ui {
         showTasks(tasks);
     }
 
+    /** Displays tasks in numbered format.
+     *
+     * @param tasks tasks to display
+     */
     private void showTasks(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);

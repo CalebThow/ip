@@ -808,6 +808,41 @@ E | 0 | project meeting | Mon 2pm | 4pm
      3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
 
+### Javadoc documentation verification session
+
+- Date: 2026-09-30
+- Aim: Verify that the Javadoc-only source changes compile and preserve the existing console behavior.
+- Result: Passed (Java 25 compilation and the direct executable parser UI fixture passed)
+
+```text
+$ java -version
+java version "25.0.4.1" 2026-08-18 LTS
+$ javac -d _temp/test-ui-classes <all src/main/java/*.java>
+Compilation completed.
+$ python .codex/skills/test-ui/scripts/run_ui_tests.py _temp/direct-parser-tests.json
+=== Test 1: Direct executable parser ===
+$ java -cp _temp/test-ui-classes chatbot.AgentCT
+[stdin]
+bye
+[output]
+____________________________________________________________
+    _                    _    ____ _____
+   / \   __ _  ___ _ __ | |_ / ___|_   _|
+  / _ \ / _` |/ _ \ '_ \| __| |     | |
+ / ___ \ (_| |  __/ | | | |_  |___  | |
+/_/   \_\__, |\___|_| |_|\__|\____| |_|
+        |___/
+____________________________________________________________
+Welcome! I'm AgentCT.
+How may I help you?
+____________________________________________________________
+____________________________________________________________
+     Goodbye! Hope you have an amazing day!
+____________________________________________________________
+RESULT: PASSED
+ALL TESTS PASSED (1)
+```
+
 ### Find command verification session
 
 - Date: 2026-09-30

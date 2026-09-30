@@ -68,12 +68,20 @@ public class Parser {
         throw new AgentCTException(invalidCommandMessage());
     }
 
+    /** Builds the error shown when a task description is missing.
+     *
+     * @return missing-description error message
+     */
     private String missingDescriptionMessage() {
         return "Please provide a task description!\n"
                 + "Format: todo <description>\n"
                 + "Example: todo Play Video Games";
     }
 
+    /** Builds the error shown for an unsupported command.
+     *
+     * @return invalid-command error message
+     */
     private String invalidCommandMessage() {
         return "Please enter a valid command!\n"
                 + "Examples:\n"
