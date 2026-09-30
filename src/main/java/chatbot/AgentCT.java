@@ -48,11 +48,12 @@ public class AgentCT {
             Storage storage)
             throws AgentCTException {
         ui.showSeparator();
+        Parser.ParsedCommand parsedCommand = new Parser().parse(command);
 
-        if (command.equals("list")) {
+        if (parsedCommand.getType() == Parser.CommandType.LIST) {
             ui.showTaskList(tasks);
-        } else if (command.matches("mark \\d+")) {
-            int taskNumber = Integer.parseInt(command.substring(5));
+        } else if (parsedCommand.getType() == Parser.CommandType.MARK) {
+            int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsDone();
@@ -61,8 +62,8 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
-        } else if (command.matches("unmark \\d+")) {
-            int taskNumber = Integer.parseInt(command.substring(7));
+        } else if (parsedCommand.getType() == Parser.CommandType.UNMARK) {
+            int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).markAsNotDone();
@@ -71,8 +72,8 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
-        } else if (command.matches("delete \\d+")) {
-            int taskNumber = Integer.parseInt(command.substring(7));
+        } else if (parsedCommand.getType() == Parser.CommandType.DELETE) {
+            int taskNumber = parsedCommand.getTaskNumber();
             if (taskNumber >= 1 && taskNumber <= taskCount) {
                 int taskIndex = taskNumber - 1;
                 Task deletedTask = tasks.remove(taskIndex);
@@ -82,65 +83,23 @@ public class AgentCT {
             } else {
                 System.out.println("     Sorry, that task number does not exist.");
             }
-        } else if (command.equals("todo") || command.startsWith("todo ")) {
-            String description = command.substring(4).trim();
-            if (description.isEmpty()) {
-                throw new AgentCTException(getMissingDescriptionMessage());
-            } else {
-                addTask(tasks, taskCount, new Todo(description), ui);
-                storage.save(tasks);
-                taskCount++;
-            }
-        } else if (command.startsWith("deadline ") && command.contains(" /by ")) {
-            int markerIndex = command.indexOf(" /by ");
-            String description = command.substring(9, markerIndex).trim();
-            String by = command.substring(markerIndex + 5).trim();
-            if (description.isEmpty()) {
-                throw new AgentCTException(getMissingDescriptionMessage());
-            } else {
-                addTask(tasks, taskCount, new Deadline(description, by), ui);
-                storage.save(tasks);
-                taskCount++;
-            }
-        } else if (command.startsWith("event ") && command.contains(" /from ")
-                && command.contains(" /to ")) {
-            int fromIndex = command.indexOf(" /from ");
-            int toIndex = command.indexOf(" /to ", fromIndex);
-            String description = command.substring(6, fromIndex).trim();
-            String from = command.substring(fromIndex + 7, toIndex).trim();
-            String to = command.substring(toIndex + 5).trim();
-            if (description.isEmpty()) {
-                throw new AgentCTException(getMissingDescriptionMessage());
-            } else {
-                addTask(tasks, taskCount, new Event(description, from, to), ui);
-                storage.save(tasks);
-                taskCount++;
-            }
-        } else {
-            throw new AgentCTException(getInvalidCommandMessage());
+        } else if (parsedCommand.getType() == Parser.CommandType.TODO) {
+            addTask(tasks, taskCount, new Todo(parsedCommand.getDescription()), ui);
+            storage.save(tasks);
+            taskCount++;
+        } else if (parsedCommand.getType() == Parser.CommandType.DEADLINE) {
+            addTask(tasks, taskCount,
+                    new Deadline(parsedCommand.getDescription(), parsedCommand.getFirstTime()), ui);
+            storage.save(tasks);
+            taskCount++;
+        } else if (parsedCommand.getType() == Parser.CommandType.EVENT) {
+            addTask(tasks, taskCount, new Event(parsedCommand.getDescription(),
+                    parsedCommand.getFirstTime(), parsedCommand.getSecondTime()), ui);
+            storage.save(tasks);
+            taskCount++;
         }
         ui.showSeparator();
         return taskCount;
-    }
-
-    /** Returns guidance for a task command without a description. */
-    private static String getMissingDescriptionMessage() {
-        return "Please provide a task description!\n"
-                + "Format: todo <description>\n"
-                + "Example: todo Play Video Games";
-    }
-
-    /** Returns guidance for input that does not match a supported command. */
-    private static String getInvalidCommandMessage() {
-        return "Please enter a valid command!\n"
-                + "Examples:\n"
-                + "  todo <description>\n"
-                + "  deadline <description> /by <time>\n"
-                + "  event <description> /from <time> /to <time>\n"
-                + "  list\n"
-                + "  mark <number>\n"
-                + "  unmark <number>\n"
-                + "  delete <number>";
     }
 
     /** Adds a task and prints the confirmation shared by task commands. */
