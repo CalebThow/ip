@@ -1,6 +1,9 @@
 package chatbot;
 
 import chatbot.exception.AgentCTException;
+import chatbot.task.Deadline;
+import chatbot.task.Event;
+import chatbot.task.Todo;
 
 /** Interprets user input and extracts arguments from supported commands. */
 public class Parser {
@@ -20,6 +23,23 @@ public class Parser {
         }
         if (command.equals("list")) {
             return new ListCommand();
+        }
+        ParsedCommand parsedCommand;
+        try {
+            parsedCommand = parse(command);
+        } catch (AgentCTException exception) {
+            return null;
+        }
+        if (parsedCommand.getType() == CommandType.TODO) {
+            return new AddCommand(new Todo(parsedCommand.getDescription()));
+        }
+        if (parsedCommand.getType() == CommandType.DEADLINE) {
+            return new AddCommand(new Deadline(parsedCommand.getDescription(),
+                    parsedCommand.getFirstTime()));
+        }
+        if (parsedCommand.getType() == CommandType.EVENT) {
+            return new AddCommand(new Event(parsedCommand.getDescription(),
+                    parsedCommand.getFirstTime(), parsedCommand.getSecondTime()));
         }
         return null;
     }
