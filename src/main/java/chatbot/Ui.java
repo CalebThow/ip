@@ -57,6 +57,16 @@ public class Ui {
     /** Displays all tasks in their numbered format. */
     public void showTaskList(List<Task> tasks) {
         System.out.println("     Here are the tasks in your list:");
+        showTasks(tasks);
+    }
+
+    /** Displays tasks matching a search keyword. */
+    public void showMatchingTasks(List<Task> tasks) {
+        System.out.println("     Here are the matching tasks in your list:");
+        showTasks(tasks);
+    }
+
+    private void showTasks(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             System.out.println("     " + (i + 1) + ".[" + task.getTaskType() + "]["

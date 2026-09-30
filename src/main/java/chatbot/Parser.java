@@ -20,6 +20,14 @@ public class Parser {
         if (command.equals("list")) {
             return new ListCommand();
         }
+        if (command.startsWith("find ")) {
+            String keyword = command.substring(5).trim();
+            if (keyword.isEmpty()) {
+                throw new AgentCTException("Please provide a keyword to search for!\n"
+                        + "Format: find <keyword>");
+            }
+            return new FindCommand(keyword);
+        }
         if (command.matches("mark \\d+")) {
             return new MarkCommand(Integer.parseInt(command.substring(5)));
         }
@@ -73,6 +81,7 @@ public class Parser {
                 + "  deadline <description> /by <time>\n"
                 + "  event <description> /from <time> /to <time>\n"
                 + "  list\n"
+                + "  find <keyword>\n"
                 + "  mark <number>\n"
                 + "  unmark <number>\n"
                 + "  delete <number>";

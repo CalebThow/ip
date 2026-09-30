@@ -3,6 +3,7 @@ package chatbot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import chatbot.task.Task;
 
@@ -57,5 +58,21 @@ public class TaskList {
     /** Returns a read-only view for display and persistence. */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
+    }
+
+    /** Returns tasks whose descriptions contain the supplied keyword.
+     *
+     * @param keyword keyword to search for
+     * @return matching tasks in their original order
+     */
+    public List<Task> find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
     }
 }
