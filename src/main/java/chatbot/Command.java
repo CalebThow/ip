@@ -13,7 +13,10 @@ public abstract class Command {
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws AgentCTException;
 
-    /** Returns whether this command ends the application. */
+    /** Returns whether this command ends the application.
+     *
+     * @return true if this command ends the application
+     */
     public boolean isExit() {
         return false;
     }

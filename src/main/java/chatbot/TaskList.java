@@ -50,7 +50,10 @@ public class TaskList {
         return tasks.remove(index);
     }
 
-    /** Returns the number of tasks. */
+    /** Returns the number of tasks.
+     *
+     * @return number of tasks in the list
+     */
     public int size() {
         return tasks.size();
     }

@@ -78,26 +78,40 @@ public class Ui {
         }
     }
 
-    /** Displays confirmation after adding a task. */
+    /** Displays confirmation after adding a task.
+     *
+     * @param task task that was added
+     * @param taskCount number of tasks after adding
+     */
     public void showTaskAdded(Task task, int taskCount) {
         System.out.println("     Got it. I've added this task:");
         System.out.println("       [" + task.getTaskType() + "][ ] " + task.getDisplayText());
         System.out.println("     Now you have " + taskCount + " tasks in the list.");
     }
 
-    /** Displays confirmation after marking a task as done. */
+    /** Displays confirmation after marking a task as done.
+     *
+     * @param task task that was marked as done
+     */
     public void showTaskMarked(Task task) {
         System.out.println("     Nice! I've marked this task as done:");
         System.out.println("       [X] " + task.getDescription());
     }
 
-    /** Displays confirmation after marking a task as not done. */
+    /** Displays confirmation after marking a task as not done.
+     *
+     * @param task task that was marked as not done
+     */
     public void showTaskUnmarked(Task task) {
         System.out.println("     OK, I've marked this task as not done yet:");
         System.out.println("       [ ] " + task.getDescription());
     }
 
-    /** Displays confirmation after deleting a task. */
+    /** Displays confirmation after deleting a task.
+     *
+     * @param task task that was deleted
+     * @param taskCount number of tasks after deletion
+     */
     public void showTaskDeleted(Task task, int taskCount) {
         System.out.println("     Noted. I've removed this task:");
         System.out.println("       [" + task.getTaskType() + "][" + task.getStatusIcon()
